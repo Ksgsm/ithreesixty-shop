@@ -1,12 +1,17 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  Download,
   MessageCircle,
+  RotateCcw,
+  Save,
   Search,
+  Settings2,
   ShieldCheck,
   ShoppingBag,
   Smartphone,
   Star,
   Truck,
+  Upload,
 } from "lucide-react";
 import iphone11Pro64Front from "./assets/products/iphone11Pro64Front.jpeg";
 import iphone11ProMax64Front from "./assets/products/iphone11ProMax64Front.jpeg";
@@ -26,6 +31,7 @@ import iphone16ProMax256Front from "./assets/products/iphone16ProMax256Front.jpe
 import iphone17ProMax256 from "./assets/products/iphone17ProMax256.jpeg";
 
 type Phone = {
+  id: string;
   model: string;
   price: number;
   storage: string;
@@ -49,10 +55,16 @@ type Benefit = {
   icon: IconType;
 };
 
-const BRAND_LOGO = iphone14Pro128;
+type PriceMap = Record<string, number>;
 
-const phones: Phone[] = [
+const BRAND_LOGO = iphone14Pro128;
+const PRICE_STORAGE_KEY = "ithreesixty-admin-prices-v1";
+
+// EASY ADMIN SECTION:
+// You can change the default prices here any time and redeploy.
+const defaultPhones: Phone[] = [
   {
+    id: "iphone-11-pro-64gb",
     model: "iPhone 11 Pro 64GB",
     price: 5200,
     storage: "64GB",
@@ -62,6 +74,7 @@ const phones: Phone[] = [
     featured: true,
   },
   {
+    id: "iphone-11-pro-max-64gb",
     model: "iPhone 11 Pro Max 64GB",
     price: 5990,
     storage: "64GB",
@@ -71,6 +84,7 @@ const phones: Phone[] = [
     featured: true,
   },
   {
+    id: "iphone-12-pro-128gb",
     model: "iPhone 12 Pro 128GB",
     price: 6290,
     storage: "128GB",
@@ -79,6 +93,7 @@ const phones: Phone[] = [
     badge: "Premium",
   },
   {
+    id: "iphone-12-pro-max-128gb",
     model: "iPhone 12 Pro Max 128GB",
     price: 7790,
     storage: "128GB",
@@ -87,6 +102,7 @@ const phones: Phone[] = [
     badge: "Top Pick",
   },
   {
+    id: "iphone-13-128gb",
     model: "iPhone 13 128GB",
     price: 6799,
     storage: "128GB",
@@ -95,6 +111,7 @@ const phones: Phone[] = [
     badge: "Clean Stock",
   },
   {
+    id: "iphone-13-pro-128gb",
     model: "iPhone 13 Pro 128GB",
     price: 8790,
     storage: "128GB",
@@ -103,6 +120,7 @@ const phones: Phone[] = [
     badge: "Pro Camera",
   },
   {
+    id: "iphone-14-128gb",
     model: "iPhone 14 128GB",
     price: 7890,
     storage: "128GB",
@@ -111,6 +129,7 @@ const phones: Phone[] = [
     badge: "Modern Pick",
   },
   {
+    id: "iphone-14-pro-128gb",
     model: "iPhone 14 Pro 128GB",
     price: 10490,
     storage: "128GB",
@@ -119,6 +138,7 @@ const phones: Phone[] = [
     badge: "Dynamic Island",
   },
   {
+    id: "iphone-14-pro-max-256gb",
     model: "iPhone 14 Pro Max 256GB",
     price: 12890,
     storage: "256GB",
@@ -127,6 +147,7 @@ const phones: Phone[] = [
     badge: "Premium Max",
   },
   {
+    id: "iphone-15-128gb",
     model: "iPhone 15 128GB",
     price: 10299,
     storage: "128GB",
@@ -135,6 +156,7 @@ const phones: Phone[] = [
     badge: "USB-C",
   },
   {
+    id: "iphone-15-pro-256gb",
     model: "iPhone 15 Pro 256GB",
     price: 14900,
     storage: "256GB",
@@ -143,6 +165,7 @@ const phones: Phone[] = [
     badge: "Titanium",
   },
   {
+    id: "iphone-15-pro-max-128gb",
     model: "iPhone 15 Pro Max 128GB",
     price: 16700,
     storage: "128GB",
@@ -151,6 +174,7 @@ const phones: Phone[] = [
     badge: "Zoom Power",
   },
   {
+    id: "iphone-16-256gb",
     model: "iPhone 16 256GB",
     price: 14890,
     storage: "256GB",
@@ -159,6 +183,7 @@ const phones: Phone[] = [
     badge: "New Arrival",
   },
   {
+    id: "iphone-16-pro-256gb",
     model: "iPhone 16 Pro 256GB",
     price: 17880,
     storage: "256GB",
@@ -167,6 +192,7 @@ const phones: Phone[] = [
     badge: "Pro Power",
   },
   {
+    id: "iphone-16-pro-max-256gb",
     model: "iPhone 16 Pro Max 256GB",
     price: 20990,
     storage: "256GB",
@@ -175,6 +201,7 @@ const phones: Phone[] = [
     badge: "Ultimate",
   },
   {
+    id: "iphone-17-pro-max-256gb",
     model: "iPhone 17 Pro Max 256GB",
     price: 22990,
     storage: "256GB",
@@ -230,14 +257,68 @@ function buildWhatsAppLink(message: string): string {
   return `https://wa.me/27678800719?text=${encodeURIComponent(message)}`;
 }
 
+function getDefaultPriceMap(): PriceMap {
+  return defaultPhones.reduce<PriceMap>((acc, phone) => {
+    acc[phone.id] = phone.price;
+    return acc;
+  }, {});
+}
+
+function sanitizePrice(input: string): number {
+  const parsed = Number(String(input).replace(/[^\d.]/g, ""));
+  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 0;
+}
+
 export default function App() {
   const [query, setQuery] = useState<string>("");
   const [selectedSeries, setSelectedSeries] = useState<string>("All");
   const [cart, setCart] = useState<Phone[]>([]);
+  const [adminOpen, setAdminOpen] = useState<boolean>(false);
+  const [adminMessage, setAdminMessage] = useState<string>("");
+  const [priceInputs, setPriceInputs] = useState<Record<string, string>>(() => {
+    const defaults = getDefaultPriceMap();
+    return Object.fromEntries(defaultPhones.map((phone) => [phone.id, String(defaults[phone.id]) ]));
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const stored = window.localStorage.getItem(PRICE_STORAGE_KEY);
+    if (!stored) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(stored) as PriceMap;
+      setPriceInputs((current) => {
+        const next = { ...current };
+        defaultPhones.forEach((phone) => {
+          if (typeof parsed[phone.id] === "number" && parsed[phone.id] > 0) {
+            next[phone.id] = String(parsed[phone.id]);
+          }
+        });
+        return next;
+      });
+      setAdminMessage("Saved prices loaded on this device.");
+    } catch {
+      setAdminMessage("Could not read saved prices.");
+    }
+  }, []);
+
+  const phones = useMemo(
+    () =>
+      defaultPhones.map((phone) => ({
+        ...phone,
+        price: sanitizePrice(priceInputs[phone.id] ?? String(phone.price)) || phone.price,
+      })),
+    [priceInputs]
+  );
 
   const seriesOptions = useMemo(
     () => ["All", ...Array.from(new Set(phones.map((phone) => phone.series)))],
-    []
+    [phones]
   );
 
   const filteredPhones = useMemo(() => {
@@ -253,9 +334,9 @@ export default function App() {
       const matchesSeries = selectedSeries === "All" || phone.series === selectedSeries;
       return matchesQuery && matchesSeries;
     });
-  }, [query, selectedSeries]);
+  }, [phones, query, selectedSeries]);
 
-  const featuredPhones = useMemo(() => phones.filter((phone) => phone.featured), []);
+  const featuredPhones = useMemo(() => phones.filter((phone) => phone.featured), [phones]);
 
   const cartCount = cart.length;
   const cartTotal = useMemo(() => cart.reduce((sum, phone) => sum + phone.price, 0), [cart]);
@@ -274,6 +355,90 @@ export default function App() {
 
   const addToCart = (phone: Phone) => setCart((current) => [...current, phone]);
   const clearCart = () => setCart([]);
+
+  const handlePriceInputChange = (id: string, value: string) => {
+    setPriceInputs((current) => ({ ...current, [id]: value }));
+    setAdminMessage("");
+  };
+
+  const savePrices = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const cleaned = defaultPhones.reduce<PriceMap>((acc, phone) => {
+      const value = sanitizePrice(priceInputs[phone.id] ?? String(phone.price));
+      acc[phone.id] = value || phone.price;
+      return acc;
+    }, {});
+
+    window.localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(cleaned));
+    setPriceInputs(Object.fromEntries(defaultPhones.map((phone) => [phone.id, String(cleaned[phone.id])])));
+    setAdminMessage("Prices saved on this browser.");
+  };
+
+  const resetPrices = () => {
+    const defaults = getDefaultPriceMap();
+    setPriceInputs(Object.fromEntries(defaultPhones.map((phone) => [phone.id, String(defaults[phone.id])] )));
+
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(PRICE_STORAGE_KEY);
+    }
+
+    setAdminMessage("Prices reset to default.");
+  };
+
+  const downloadPriceList = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const exportData = defaultPhones.map((phone) => ({
+      model: phone.model,
+      price: sanitizePrice(priceInputs[phone.id] ?? String(phone.price)) || phone.price,
+    }));
+
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "ithreesixty-prices.json";
+    link.click();
+    URL.revokeObjectURL(url);
+    setAdminMessage("Price list downloaded.");
+  };
+
+  const importPriceList = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result)) as Array<{ model?: string; price?: number | string }>;
+        const nextInputs = { ...priceInputs };
+
+        defaultPhones.forEach((phone) => {
+          const match = parsed.find((item) => item.model === phone.model);
+          if (match?.price !== undefined) {
+            const value = sanitizePrice(String(match.price));
+            if (value > 0) {
+              nextInputs[phone.id] = String(value);
+            }
+          }
+        });
+
+        setPriceInputs(nextInputs);
+        setAdminMessage("Imported prices. Click save to keep them on this browser.");
+      } catch {
+        setAdminMessage("Import failed. Use the downloaded JSON format.");
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
+  };
 
   return (
     <div className="min-h-screen bg-white text-slate-950">
@@ -501,6 +666,72 @@ export default function App() {
               <p><span className="font-semibold text-white">Order Method:</span> Online browsing with WhatsApp checkout</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 pb-8 sm:px-10 lg:px-12">
+        <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <button
+            onClick={() => setAdminOpen((current) => !current)}
+            className="flex w-full items-center justify-between gap-4 rounded-[1.5rem] bg-slate-950 px-5 py-4 text-left text-white"
+          >
+            <div className="flex items-center gap-3">
+              <Settings2 className="h-5 w-5" />
+              <div>
+                <p className="text-sm font-semibold">Admin Price Editor</p>
+                <p className="text-xs text-white/70">Open this section to change prices fast.</p>
+              </div>
+            </div>
+            <span className="text-sm">{adminOpen ? "Hide" : "Open"}</span>
+          </button>
+
+          {adminOpen && (
+            <div className="mt-6 space-y-6">
+              <div className="rounded-[1.5rem] border border-cyan-100 bg-cyan-50 p-4 text-sm leading-6 text-slate-700">
+                Change any price below, then click <span className="font-semibold">Save Prices</span>. These changes stay on the browser you used. To move the same prices to another computer, click <span className="font-semibold">Download JSON</span> and later use <span className="font-semibold">Import JSON</span>.
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {defaultPhones.map((phone) => (
+                  <label key={phone.id} className="rounded-[1.5rem] border border-slate-200 p-4">
+                    <p className="text-sm font-semibold text-slate-950">{phone.model}</p>
+                    <p className="mt-1 text-xs text-slate-500">Enter amount without the R sign if you want.</p>
+                    <div className="mt-3 flex items-center gap-3 rounded-full border border-slate-200 px-4 py-3">
+                      <span className="text-sm font-semibold text-slate-500">R</span>
+                      <input
+                        value={priceInputs[phone.id] ?? String(phone.price)}
+                        onChange={(event) => handlePriceInputChange(phone.id, event.target.value)}
+                        inputMode="numeric"
+                        className="w-full bg-transparent text-sm outline-none"
+                      />
+                    </div>
+                  </label>
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button onClick={savePrices} className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white">
+                  <Save className="h-4 w-4" />
+                  Save Prices
+                </button>
+                <button onClick={resetPrices} className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700">
+                  <RotateCcw className="h-4 w-4" />
+                  Reset Default
+                </button>
+                <button onClick={downloadPriceList} className="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700">
+                  <Download className="h-4 w-4" />
+                  Download JSON
+                </button>
+                <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-slate-300 px-5 py-3 text-sm font-medium text-slate-700">
+                  <Upload className="h-4 w-4" />
+                  Import JSON
+                  <input type="file" accept="application/json" className="hidden" onChange={importPriceList} />
+                </label>
+              </div>
+
+              {adminMessage && <p className="text-sm text-cyan-700">{adminMessage}</p>}
+            </div>
+          )}
         </div>
       </section>
 
