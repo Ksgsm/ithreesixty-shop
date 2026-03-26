@@ -8,10 +8,6 @@ import {
   Star,
   Truck,
 } from "lucide-react";
-import iphone11BackOne from "./assets/iphone11-back-1.jpeg";
-import iphone11FrontOne from "./assets/iphone11-front-1.jpeg";
-import iphone11BackTwo from "./assets/iphone11-back-2.jpeg";
-import iphone11FrontTwo from "./assets/iphone11-front-2.jpeg";
 
 type Phone = {
   model: string;
@@ -37,7 +33,8 @@ type Benefit = {
   icon: IconType;
 };
 
-const BRAND_LOGO = iphone11FrontOne;
+const BRAND_LOGO =
+  "https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=300&q=80";
 
 const phones: Phone[] = [
   {
@@ -63,8 +60,9 @@ const phones: Phone[] = [
     price: 4500,
     storage: "64GB",
     series: "11",
-    image: iphone11BackOne,
-    badge: "Real Photos",
+    image:
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80",
+    badge: "Great Value",
     featured: true,
   },
   {
@@ -72,8 +70,9 @@ const phones: Phone[] = [
     price: 4900,
     storage: "128GB",
     series: "11",
-    image: iphone11FrontOne,
-    badge: "In Stock",
+    image:
+      "https://images.unsplash.com/photo-1603898037225-1c09b0d0c3a0?auto=format&fit=crop&w=1200&q=80",
+    badge: "Trending",
     featured: true,
   },
   {
@@ -81,16 +80,18 @@ const phones: Phone[] = [
     price: 5200,
     storage: "Pro",
     series: "11 Pro",
-    image: iphone11BackTwo,
-    badge: "Boxed Stock",
+    image:
+      "https://images.unsplash.com/photo-1605236453806-6ff36851218e?auto=format&fit=crop&w=1200&q=80",
+    badge: "Pro Choice",
   },
   {
     model: "iPhone 11 Pro Max 64GB",
     price: 5990,
     storage: "64GB",
     series: "11 Pro Max",
-    image: iphone11FrontTwo,
-    badge: "Clean Display",
+    image:
+      "https://images.unsplash.com/photo-1603898037225-1c09b0d0c3a0?auto=format&fit=crop&w=1200&q=80",
+    badge: "Large Display",
   },
   {
     model: "iPhone 12 64GB",
@@ -373,17 +374,17 @@ export default function App() {
           <div id="home" className="grid items-center gap-14 py-20 lg:grid-cols-2 lg:py-28">
             <div>
               <div className="mb-6 inline-flex items-center rounded-full border border-cyan-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm">
-                Real iPhone stock photos now live
+                Online iPhone shop with premium blue-accent design
               </div>
               <h1 className="max-w-3xl text-5xl font-semibold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-                Shop real iPhones
+                Shop iPhones
                 <br />
-                with your
+                online with a
                 <br />
-                actual stock photos.
+                premium feel.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
-                ITHREESIXTY CELLPHONES lets customers browse your real stock, filter models, add items to cart, and place orders through WhatsApp.
+                ITHREESIXTY CELLPHONES lets customers browse models, filter products, add items to cart, and place orders through WhatsApp.
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -413,8 +414,8 @@ export default function App() {
               <div className="absolute inset-0 -translate-x-6 translate-y-6 rounded-[2rem] bg-gradient-to-br from-cyan-300/30 to-blue-500/30 blur-3xl" />
               <div className="relative rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl">
                 <img
-                  src={iphone11FrontTwo}
-                  alt="ITHREESIXTY iPhone in hand"
+                  src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80"
+                  alt="Premium iPhone presentation"
                   className="h-[34rem] w-full rounded-[1.75rem] object-cover"
                 />
                 <div className="absolute bottom-10 left-10 right-10 rounded-[1.5rem] border border-white/30 bg-white/80 p-6 shadow-xl backdrop-blur-xl">
