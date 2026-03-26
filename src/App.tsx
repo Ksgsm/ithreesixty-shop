@@ -8,10 +8,22 @@ import {
   Star,
   Truck,
 } from "lucide-react";
-import iphone11BackOne from "./assets/iphone11-back-1.jpeg";
-import iphone11FrontOne from "./assets/iphone11-front-1.jpeg";
-import iphone11BackTwo from "./assets/iphone11-back-2.jpeg";
-import iphone11FrontTwo from "./assets/iphone11-front-2.jpeg";
+import iphone11Pro64Front from "./assets/products/iphone11Pro64Front.jpeg";
+import iphone11ProMax64Front from "./assets/products/iphone11ProMax64Front.jpeg";
+import iphone12Pro128Front from "./assets/products/iphone12Pro128Front.jpeg";
+import iphone12ProMax128Front from "./assets/products/iphone12ProMax128Front.jpeg";
+import iphone13_128Front from "./assets/products/iphone13_128Front.jpeg";
+import iphone13Pro128Front from "./assets/products/iphone13Pro128Front.jpeg";
+import iphone14_128Front from "./assets/products/iphone14_128Front.jpeg";
+import iphone14Pro128 from "./assets/products/iphone14Pro128.jpeg";
+import iphone14ProMax256Front from "./assets/products/iphone14ProMax256Front.jpeg";
+import iphone15_128 from "./assets/products/iphone15_128.jpeg";
+import iphone15Pro256Back from "./assets/products/iphone15Pro256Back.jpeg";
+import iphone15ProMax128Front from "./assets/products/iphone15ProMax128Front.jpeg";
+import iphone16_256Front from "./assets/products/iphone16_256Front.jpeg";
+import iphone16Pro256Front from "./assets/products/iphone16Pro256Front.jpeg";
+import iphone16ProMax256Front from "./assets/products/iphone16ProMax256Front.jpeg";
+import iphone17ProMax256 from "./assets/products/iphone17ProMax256.jpeg";
 
 type Phone = {
   model: string;
@@ -37,86 +49,33 @@ type Benefit = {
   icon: IconType;
 };
 
-const BRAND_LOGO = iphone11FrontOne;
+const BRAND_LOGO = iphone14Pro128;
 
 const phones: Phone[] = [
   {
-    model: "iPhone XR 64GB",
-    price: 3500,
-    storage: "64GB",
-    series: "XR",
-    image:
-      "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1200&q=80",
-    badge: "Best Budget",
-  },
-  {
-    model: "iPhone XR 128GB",
-    price: 3900,
-    storage: "128GB",
-    series: "XR",
-    image:
-      "https://images.unsplash.com/photo-1591337676887-a217a6970a8a?auto=format&fit=crop&w=1200&q=80",
-    badge: "Popular",
-  },
-  {
-    model: "iPhone 11 64GB",
-    price: 4500,
-    storage: "64GB",
-    series: "11",
-    image: iphone11BackOne,
-    badge: "Real Photos",
-    featured: true,
-  },
-  {
-    model: "iPhone 11 128GB",
-    price: 4900,
-    storage: "128GB",
-    series: "11",
-    image: iphone11FrontOne,
-    badge: "In Stock",
-    featured: true,
-  },
-  {
-    model: "iPhone 11 Pro",
+    model: "iPhone 11 Pro 64GB",
     price: 5200,
-    storage: "Pro",
+    storage: "64GB",
     series: "11 Pro",
-    image: iphone11BackTwo,
-    badge: "Boxed Stock",
+    image: iphone11Pro64Front,
+    badge: "Real Photo",
+    featured: true,
   },
   {
     model: "iPhone 11 Pro Max 64GB",
     price: 5990,
     storage: "64GB",
     series: "11 Pro Max",
-    image: iphone11FrontTwo,
-    badge: "Clean Display",
-  },
-  {
-    model: "iPhone 12 64GB",
-    price: 4990,
-    storage: "64GB",
-    series: "12",
-    image:
-      "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?auto=format&fit=crop&w=1200&q=80",
-    badge: "Hot Deal",
-  },
-  {
-    model: "iPhone 12 128GB",
-    price: 5290,
-    storage: "128GB",
-    series: "12",
-    image:
-      "https://images.unsplash.com/photo-1632633173522-47456b52e0a4?auto=format&fit=crop&w=1200&q=80",
-    badge: "Top Seller",
+    image: iphone11ProMax64Front,
+    badge: "Featured",
+    featured: true,
   },
   {
     model: "iPhone 12 Pro 128GB",
     price: 6290,
     storage: "128GB",
     series: "12 Pro",
-    image:
-      "https://images.unsplash.com/photo-1609692814858-f7cd2f0afa4f?auto=format&fit=crop&w=1200&q=80",
+    image: iphone12Pro128Front,
     badge: "Premium",
   },
   {
@@ -124,53 +83,31 @@ const phones: Phone[] = [
     price: 7790,
     storage: "128GB",
     series: "12 Pro Max",
-    image:
-      "https://images.unsplash.com/photo-1610792516307-ea5acd9c3b00?auto=format&fit=crop&w=1200&q=80",
-    badge: "Flagship",
+    image: iphone12ProMax128Front,
+    badge: "Top Pick",
   },
   {
     model: "iPhone 13 128GB",
     price: 6799,
     storage: "128GB",
     series: "13",
-    image:
-      "https://images.unsplash.com/photo-1631730486572-226ef61d1a4d?auto=format&fit=crop&w=1200&q=80",
-    badge: "Clean Design",
-  },
-  {
-    model: "iPhone 13 256GB",
-    price: 6990,
-    storage: "256GB",
-    series: "13",
-    image:
-      "https://images.unsplash.com/photo-1631730486782-d8bdf5d1534f?auto=format&fit=crop&w=1200&q=80",
-    badge: "More Storage",
+    image: iphone13_128Front,
+    badge: "Clean Stock",
   },
   {
     model: "iPhone 13 Pro 128GB",
     price: 8790,
     storage: "128GB",
     series: "13 Pro",
-    image:
-      "https://images.unsplash.com/photo-1631730486783-e1d5d4d4bb16?auto=format&fit=crop&w=1200&q=80",
+    image: iphone13Pro128Front,
     badge: "Pro Camera",
-  },
-  {
-    model: "iPhone 13 Pro Max 128GB",
-    price: 10499,
-    storage: "128GB",
-    series: "13 Pro Max",
-    image:
-      "https://images.unsplash.com/photo-1631730486785-8b2fbcac28cf?auto=format&fit=crop&w=1200&q=80",
-    badge: "Best Seller",
   },
   {
     model: "iPhone 14 128GB",
     price: 7890,
     storage: "128GB",
     series: "14",
-    image:
-      "https://images.unsplash.com/photo-1664478546384-d57ffe74a87f?auto=format&fit=crop&w=1200&q=80",
+    image: iphone14_128Front,
     badge: "Modern Pick",
   },
   {
@@ -178,17 +115,15 @@ const phones: Phone[] = [
     price: 10490,
     storage: "128GB",
     series: "14 Pro",
-    image:
-      "https://images.unsplash.com/photo-1663499482523-8b1707e39e74?auto=format&fit=crop&w=1200&q=80",
+    image: iphone14Pro128,
     badge: "Dynamic Island",
   },
   {
-    model: "iPhone 14 Pro Max 128GB",
+    model: "iPhone 14 Pro Max 256GB",
     price: 12890,
-    storage: "128GB",
+    storage: "256GB",
     series: "14 Pro Max",
-    image:
-      "https://images.unsplash.com/photo-1663761879871-f4f44ed68d46?auto=format&fit=crop&w=1200&q=80",
+    image: iphone14ProMax256Front,
     badge: "Premium Max",
   },
   {
@@ -196,8 +131,7 @@ const phones: Phone[] = [
     price: 10299,
     storage: "128GB",
     series: "15",
-    image:
-      "https://images.unsplash.com/photo-1695634426611-16f31ac5d9ef?auto=format&fit=crop&w=1200&q=80",
+    image: iphone15_128,
     badge: "USB-C",
   },
   {
@@ -205,17 +139,15 @@ const phones: Phone[] = [
     price: 14900,
     storage: "256GB",
     series: "15 Pro",
-    image:
-      "https://images.unsplash.com/photo-1696446702056-c5a5f3386b4f?auto=format&fit=crop&w=1200&q=80",
+    image: iphone15Pro256Back,
     badge: "Titanium",
   },
   {
-    model: "iPhone 15 Pro Max 256GB",
+    model: "iPhone 15 Pro Max 128GB",
     price: 16700,
-    storage: "256GB",
+    storage: "128GB",
     series: "15 Pro Max",
-    image:
-      "https://images.unsplash.com/photo-1697294578841-a4f6ebb9ba4e?auto=format&fit=crop&w=1200&q=80",
+    image: iphone15ProMax128Front,
     badge: "Zoom Power",
   },
   {
@@ -223,8 +155,7 @@ const phones: Phone[] = [
     price: 14890,
     storage: "256GB",
     series: "16",
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80",
+    image: iphone16_256Front,
     badge: "New Arrival",
   },
   {
@@ -232,8 +163,7 @@ const phones: Phone[] = [
     price: 17880,
     storage: "256GB",
     series: "16 Pro",
-    image:
-      "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=1200&q=80",
+    image: iphone16Pro256Front,
     badge: "Pro Power",
   },
   {
@@ -241,9 +171,16 @@ const phones: Phone[] = [
     price: 20990,
     storage: "256GB",
     series: "16 Pro Max",
-    image:
-      "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=1200&q=80",
+    image: iphone16ProMax256Front,
     badge: "Ultimate",
+  },
+  {
+    model: "iPhone 17 Pro Max 256GB",
+    price: 22990,
+    storage: "256GB",
+    series: "17 Pro Max",
+    image: iphone17ProMax256,
+    badge: "Latest Stock",
   },
 ];
 
@@ -373,14 +310,14 @@ export default function App() {
           <div id="home" className="grid items-center gap-14 py-20 lg:grid-cols-2 lg:py-28">
             <div>
               <div className="mb-6 inline-flex items-center rounded-full border border-cyan-200 bg-white px-4 py-2 text-sm text-slate-700 shadow-sm">
-                Real iPhone stock photos now live
+                Your real iPhone photos are now live
               </div>
               <h1 className="max-w-3xl text-5xl font-semibold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
                 Shop real iPhones
                 <br />
                 with your
                 <br />
-                actual stock photos.
+                actual product photos.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
                 ITHREESIXTY CELLPHONES lets customers browse your real stock, filter models, add items to cart, and place orders through WhatsApp.
@@ -413,7 +350,7 @@ export default function App() {
               <div className="absolute inset-0 -translate-x-6 translate-y-6 rounded-[2rem] bg-gradient-to-br from-cyan-300/30 to-blue-500/30 blur-3xl" />
               <div className="relative rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl">
                 <img
-                  src={iphone11FrontTwo}
+                  src={iphone14ProMax256Front}
                   alt="ITHREESIXTY iPhone in hand"
                   className="h-[34rem] w-full rounded-[1.75rem] object-cover"
                 />
