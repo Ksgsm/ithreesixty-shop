@@ -10,7 +10,6 @@ import {
   ShoppingBag,
   Smartphone,
   Star,
-  Tag,
   Truck,
   Upload,
 } from "lucide-react";
@@ -53,8 +52,6 @@ type Phone = {
   id: string;
   model: string;
   price: number;
-  originalPrice: number;
-  saleActive: boolean;
   storage: string;
   series: string;
   frontImage: string;
@@ -64,9 +61,7 @@ type Phone = {
 };
 
 type IconType = ComponentType<{ className?: string }>;
-type PriceMap = Record<string, { originalPrice: number; salePrice: number; saleActive: boolean }>;
-
-type EditablePriceState = Record<string, { originalPrice: string; salePrice: string; saleActive: boolean }>;
+type PriceMap = Record<string, number>;
 
 type Service = {
   title: string;
@@ -81,30 +76,30 @@ type Benefit = {
 };
 
 const BRAND_LOGO = iphone14ProMax256Front;
-const PRICE_STORAGE_KEY = "ithreesixty-admin-prices-v2";
+const PRICE_STORAGE_KEY = "ithreesixty-admin-prices-v1";
 
 const defaultPhones: Phone[] = [
-  { id: "iphone-xr-64gb", model: "iPhone XR 64GB", price: 3990, originalPrice: 3990, saleActive: false, storage: "64GB", series: "XR", frontImage: iphoneXR64Front, backImage: iphoneXR64Back, badge: "Front + Back", featured: true },
-  { id: "iphone-xr-128gb", model: "iPhone XR 128GB", price: 4490, originalPrice: 4490, saleActive: false, storage: "128GB", series: "XR", frontImage: iphoneXR128Front, backImage: iphoneXR128Back, badge: "Front + Back" },
-  { id: "iphone-11-64gb", model: "iPhone 11 64GB", price: 4990, originalPrice: 4990, saleActive: false, storage: "64GB", series: "11", frontImage: iphone1164Front, backImage: iphone1164Back, badge: "Front + Back", featured: true },
-  { id: "iphone-11-128gb", model: "iPhone 11 128GB", price: 5490, originalPrice: 5490, saleActive: false, storage: "128GB", series: "11", frontImage: iphone11128Front, backImage: iphone11128Back, badge: "Front + Back", featured: true },
-  { id: "iphone-11-pro-64gb", model: "iPhone 11 Pro 64GB", price: 5200, originalPrice: 5200, saleActive: false, storage: "64GB", series: "11 Pro", frontImage: iphone11Pro64Front, backImage: iphone11Pro64Back, badge: "Real Photo" },
-  { id: "iphone-11-pro-max-64gb", model: "iPhone 11 Pro Max 64GB", price: 5990, originalPrice: 5990, saleActive: false, storage: "64GB", series: "11 Pro Max", frontImage: iphone11ProMax64Front, badge: "Featured", featured: true },
-  { id: "iphone-12-pro-128gb", model: "iPhone 12 Pro 128GB", price: 6290, originalPrice: 6290, saleActive: false, storage: "128GB", series: "12 Pro", frontImage: iphone12Pro128Front, backImage: iphone12Pro128Back, badge: "Front + Back" },
-  { id: "iphone-12-pro-max-128gb", model: "iPhone 12 Pro Max 128GB", price: 7790, originalPrice: 7790, saleActive: false, storage: "128GB", series: "12 Pro Max", frontImage: iphone12ProMax128Front, backImage: iphone12ProMax128Back, badge: "Top Pick" },
-  { id: "iphone-13-128gb", model: "iPhone 13 128GB", price: 6799, originalPrice: 6799, saleActive: false, storage: "128GB", series: "13", frontImage: iphone13_128Front, backImage: iphone13_128Back, badge: "Front + Back" },
-  { id: "iphone-13-pro-128gb", model: "iPhone 13 Pro 128GB", price: 8790, originalPrice: 8790, saleActive: false, storage: "128GB", series: "13 Pro", frontImage: iphone13Pro128Front, backImage: iphone13Pro128Back, badge: "Pro Camera" },
-  { id: "iphone-14-128gb", model: "iPhone 14 128GB", price: 7890, originalPrice: 7890, saleActive: false, storage: "128GB", series: "14", frontImage: iphone14_128Front, backImage: iphone14_128Back, badge: "Front + Back" },
-  { id: "iphone-14-pro-128gb", model: "iPhone 14 Pro 128GB", price: 10490, originalPrice: 10490, saleActive: false, storage: "128GB", series: "14 Pro", frontImage: iphone14Pro128Front, badge: "Dynamic Island" },
-  { id: "iphone-14-pro-256gb", model: "iPhone 14 Pro 256GB", price: 11290, originalPrice: 11290, saleActive: false, storage: "256GB", series: "14 Pro", frontImage: iphone14Pro256Front, badge: "Extra Storage" },
-  { id: "iphone-14-pro-max-256gb", model: "iPhone 14 Pro Max 256GB", price: 12890, originalPrice: 12890, saleActive: false, storage: "256GB", series: "14 Pro Max", frontImage: iphone14ProMax256Front, badge: "Premium Max" },
-  { id: "iphone-15-128gb", model: "iPhone 15 128GB", price: 10299, originalPrice: 10299, saleActive: false, storage: "128GB", series: "15", frontImage: iphone15_128Front, badge: "USB-C" },
-  { id: "iphone-15-pro-256gb", model: "iPhone 15 Pro 256GB", price: 14900, originalPrice: 14900, saleActive: false, storage: "256GB", series: "15 Pro", frontImage: iphone15Pro256Back, badge: "Titanium" },
-  { id: "iphone-15-pro-max-128gb", model: "iPhone 15 Pro Max 128GB", price: 16700, originalPrice: 16700, saleActive: false, storage: "128GB", series: "15 Pro Max", frontImage: iphone15ProMax128Front, badge: "Zoom Power" },
-  { id: "iphone-16-256gb", model: "iPhone 16 256GB", price: 14890, originalPrice: 14890, saleActive: false, storage: "256GB", series: "16", frontImage: iphone16_256Front, badge: "New Arrival" },
-  { id: "iphone-16-pro-256gb", model: "iPhone 16 Pro 256GB", price: 17880, originalPrice: 17880, saleActive: false, storage: "256GB", series: "16 Pro", frontImage: iphone16Pro256Front, backImage: iphone16Pro256Back, badge: "Front + Back" },
-  { id: "iphone-16-pro-max-256gb", model: "iPhone 16 Pro Max 256GB", price: 20990, originalPrice: 20990, saleActive: false, storage: "256GB", series: "16 Pro Max", frontImage: iphone16ProMax256Front, backImage: iphone16ProMax256Back, badge: "Ultimate" },
-  { id: "iphone-17-pro-max-256gb", model: "iPhone 17 Pro Max 256GB", price: 22990, originalPrice: 22990, saleActive: false, storage: "256GB", series: "17 Pro Max", frontImage: iphone17ProMax256Front, backImage: iphone17ProMax256Back, badge: "Latest Stock", featured: true },
+  { id: "iphone-xr-64gb", model: "iPhone XR 64GB", price: 3990, storage: "64GB", series: "XR", frontImage: iphoneXR64Front, backImage: iphoneXR64Back, badge: "Front + Back", featured: true },
+  { id: "iphone-xr-128gb", model: "iPhone XR 128GB", price: 4490, storage: "128GB", series: "XR", frontImage: iphoneXR128Front, backImage: iphoneXR128Back, badge: "Front + Back" },
+  { id: "iphone-11-64gb", model: "iPhone 11 64GB", price: 4990, storage: "64GB", series: "11", frontImage: iphone1164Front, backImage: iphone1164Back, badge: "Front + Back", featured: true },
+  { id: "iphone-11-128gb", model: "iPhone 11 128GB", price: 5490, storage: "128GB", series: "11", frontImage: iphone11128Front, backImage: iphone11128Back, badge: "Front + Back", featured: true },
+  { id: "iphone-11-pro-64gb", model: "iPhone 11 Pro 64GB", price: 5200, storage: "64GB", series: "11 Pro", frontImage: iphone11Pro64Front, backImage: iphone11Pro64Back, badge: "Real Photo" },
+  { id: "iphone-11-pro-max-64gb", model: "iPhone 11 Pro Max 64GB", price: 5990, storage: "64GB", series: "11 Pro Max", frontImage: iphone11ProMax64Front, badge: "Featured", featured: true },
+  { id: "iphone-12-pro-128gb", model: "iPhone 12 Pro 128GB", price: 6290, storage: "128GB", series: "12 Pro", frontImage: iphone12Pro128Front, backImage: iphone12Pro128Back, badge: "Front + Back" },
+  { id: "iphone-12-pro-max-128gb", model: "iPhone 12 Pro Max 128GB", price: 7790, storage: "128GB", series: "12 Pro Max", frontImage: iphone12ProMax128Front, backImage: iphone12ProMax128Back, badge: "Top Pick" },
+  { id: "iphone-13-128gb", model: "iPhone 13 128GB", price: 6799, storage: "128GB", series: "13", frontImage: iphone13_128Front, backImage: iphone13_128Back, badge: "Front + Back" },
+  { id: "iphone-13-pro-128gb", model: "iPhone 13 Pro 128GB", price: 8790, storage: "128GB", series: "13 Pro", frontImage: iphone13Pro128Front, backImage: iphone13Pro128Back, badge: "Pro Camera" },
+  { id: "iphone-14-128gb", model: "iPhone 14 128GB", price: 7890, storage: "128GB", series: "14", frontImage: iphone14_128Front, backImage: iphone14_128Back, badge: "Front + Back" },
+  { id: "iphone-14-pro-128gb", model: "iPhone 14 Pro 128GB", price: 10490, storage: "128GB", series: "14 Pro", frontImage: iphone14Pro128Front, badge: "Dynamic Island" },
+  { id: "iphone-14-pro-256gb", model: "iPhone 14 Pro 256GB", price: 11290, storage: "256GB", series: "14 Pro", frontImage: iphone14Pro256Front, badge: "Extra Storage" },
+  { id: "iphone-14-pro-max-256gb", model: "iPhone 14 Pro Max 256GB", price: 12890, storage: "256GB", series: "14 Pro Max", frontImage: iphone14ProMax256Front, badge: "Premium Max" },
+  { id: "iphone-15-128gb", model: "iPhone 15 128GB", price: 10299, storage: "128GB", series: "15", frontImage: iphone15_128Front, badge: "USB-C" },
+  { id: "iphone-15-pro-256gb", model: "iPhone 15 Pro 256GB", price: 14900, storage: "256GB", series: "15 Pro", frontImage: iphone15Pro256Back, badge: "Titanium" },
+  { id: "iphone-15-pro-max-128gb", model: "iPhone 15 Pro Max 128GB", price: 16700, storage: "128GB", series: "15 Pro Max", frontImage: iphone15ProMax128Front, badge: "Zoom Power" },
+  { id: "iphone-16-256gb", model: "iPhone 16 256GB", price: 14890, storage: "256GB", series: "16", frontImage: iphone16_256Front, badge: "New Arrival" },
+  { id: "iphone-16-pro-256gb", model: "iPhone 16 Pro 256GB", price: 17880, storage: "256GB", series: "16 Pro", frontImage: iphone16Pro256Front, backImage: iphone16Pro256Back, badge: "Front + Back" },
+  { id: "iphone-16-pro-max-256gb", model: "iPhone 16 Pro Max 256GB", price: 20990, storage: "256GB", series: "16 Pro Max", frontImage: iphone16ProMax256Front, backImage: iphone16ProMax256Back, badge: "Ultimate" },
+  { id: "iphone-17-pro-max-256gb", model: "iPhone 17 Pro Max 256GB", price: 22990, storage: "256GB", series: "17 Pro Max", frontImage: iphone17ProMax256Front, backImage: iphone17ProMax256Back, badge: "Latest Stock", featured: true },
 ];
 
 const services: Service[] = [
@@ -120,7 +115,7 @@ const benefits: Benefit[] = [
 ];
 
 function formatPrice(price: number): string {
-  return `R${Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.00`;
+  return `R${Math.round(price).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 }
 
 function buildWhatsAppLink(message: string): string {
@@ -129,11 +124,7 @@ function buildWhatsAppLink(message: string): string {
 
 function getDefaultPriceMap(): PriceMap {
   return defaultPhones.reduce<PriceMap>((acc, phone) => {
-    acc[phone.id] = {
-      originalPrice: phone.originalPrice,
-      salePrice: phone.price,
-      saleActive: phone.saleActive,
-    };
+    acc[phone.id] = phone.price;
     return acc;
   }, {});
 }
@@ -143,11 +134,6 @@ function sanitizePrice(input: string): number {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 0;
 }
 
-function getDiscountPercent(originalPrice: number, salePrice: number): number {
-  if (originalPrice <= salePrice || originalPrice <= 0) return 0;
-  return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
-}
-
 export default function App() {
   const [query, setQuery] = useState("");
   const [selectedSeries, setSelectedSeries] = useState("All");
@@ -155,18 +141,9 @@ export default function App() {
   const [adminOpen, setAdminOpen] = useState(false);
   const [adminMessage, setAdminMessage] = useState("");
   const [showBackMap, setShowBackMap] = useState<Record<string, boolean>>({});
-  const [priceInputs, setPriceInputs] = useState<EditablePriceState>(() => {
+  const [priceInputs, setPriceInputs] = useState<Record<string, string>>(() => {
     const defaults = getDefaultPriceMap();
-    return Object.fromEntries(
-      defaultPhones.map((phone) => [
-        phone.id,
-        {
-          originalPrice: String(defaults[phone.id].originalPrice),
-          salePrice: String(defaults[phone.id].salePrice),
-          saleActive: defaults[phone.id].saleActive,
-        },
-      ])
-    );
+    return Object.fromEntries(defaultPhones.map((phone) => [phone.id, String(defaults[phone.id])]));
   });
 
   useEffect(() => {
@@ -178,38 +155,20 @@ export default function App() {
       setPriceInputs((current) => {
         const next = { ...current };
         defaultPhones.forEach((phone) => {
-          const storedItem = parsed[phone.id];
-          if (!storedItem) return;
-          const originalPrice = sanitizePrice(String(storedItem.originalPrice));
-          const salePrice = sanitizePrice(String(storedItem.salePrice));
-          next[phone.id] = {
-            originalPrice: String(originalPrice || phone.originalPrice),
-            salePrice: String(salePrice || phone.price),
-            saleActive: Boolean(storedItem.saleActive && originalPrice > salePrice),
-          };
+          if (typeof parsed[phone.id] === "number" && parsed[phone.id] > 0) {
+            next[phone.id] = String(parsed[phone.id]);
+          }
         });
         return next;
       });
-      setAdminMessage("Saved prices and sale settings loaded on this device.");
+      setAdminMessage("Saved prices loaded on this device.");
     } catch {
       setAdminMessage("Could not read saved prices.");
     }
   }, []);
 
   const phones = useMemo(
-    () =>
-      defaultPhones.map((phone) => {
-        const inputs = priceInputs[phone.id];
-        const originalPrice = sanitizePrice(inputs?.originalPrice ?? String(phone.originalPrice)) || phone.originalPrice;
-        const salePrice = sanitizePrice(inputs?.salePrice ?? String(phone.price)) || phone.price;
-        const saleActive = Boolean(inputs?.saleActive && originalPrice > salePrice);
-        return {
-          ...phone,
-          originalPrice,
-          price: saleActive ? salePrice : originalPrice,
-          saleActive,
-        };
-      }),
+    () => defaultPhones.map((phone) => ({ ...phone, price: sanitizePrice(priceInputs[phone.id] ?? String(phone.price)) || phone.price })),
     [priceInputs]
   );
 
@@ -237,71 +196,33 @@ export default function App() {
   const addToCart = (phone: Phone) => setCart((current) => [...current, phone]);
   const clearCart = () => setCart([]);
 
-  const handlePriceInputChange = (id: string, field: "originalPrice" | "salePrice", value: string) => {
-    setPriceInputs((current) => ({ ...current, [id]: { ...current[id], [field]: value } }));
-    setAdminMessage("");
-  };
-
-  const toggleSale = (id: string) => {
-    setPriceInputs((current) => ({ ...current, [id]: { ...current[id], saleActive: !current[id].saleActive } }));
+  const handlePriceInputChange = (id: string, value: string) => {
+    setPriceInputs((current) => ({ ...current, [id]: value }));
     setAdminMessage("");
   };
 
   const savePrices = () => {
     if (typeof window === "undefined") return;
     const cleaned = defaultPhones.reduce<PriceMap>((acc, phone) => {
-      const originalPrice = sanitizePrice(priceInputs[phone.id]?.originalPrice ?? String(phone.originalPrice)) || phone.originalPrice;
-      const salePrice = sanitizePrice(priceInputs[phone.id]?.salePrice ?? String(phone.price)) || phone.price;
-      acc[phone.id] = {
-        originalPrice,
-        salePrice,
-        saleActive: Boolean(priceInputs[phone.id]?.saleActive && originalPrice > salePrice),
-      };
+      const value = sanitizePrice(priceInputs[phone.id] ?? String(phone.price));
+      acc[phone.id] = value || phone.price;
       return acc;
     }, {});
     window.localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(cleaned));
-    setPriceInputs(
-      Object.fromEntries(
-        defaultPhones.map((phone) => [
-          phone.id,
-          {
-            originalPrice: String(cleaned[phone.id].originalPrice),
-            salePrice: String(cleaned[phone.id].salePrice),
-            saleActive: cleaned[phone.id].saleActive,
-          },
-        ])
-      )
-    );
-    setAdminMessage("Prices and sale settings saved on this browser.");
+    setPriceInputs(Object.fromEntries(defaultPhones.map((phone) => [phone.id, String(cleaned[phone.id])] )));
+    setAdminMessage("Prices saved on this browser.");
   };
 
   const resetPrices = () => {
     const defaults = getDefaultPriceMap();
-    setPriceInputs(
-      Object.fromEntries(
-        defaultPhones.map((phone) => [
-          phone.id,
-          {
-            originalPrice: String(defaults[phone.id].originalPrice),
-            salePrice: String(defaults[phone.id].salePrice),
-            saleActive: defaults[phone.id].saleActive,
-          },
-        ])
-      )
-    );
+    setPriceInputs(Object.fromEntries(defaultPhones.map((phone) => [phone.id, String(defaults[phone.id])] )));
     if (typeof window !== "undefined") window.localStorage.removeItem(PRICE_STORAGE_KEY);
     setAdminMessage("Prices reset to default.");
   };
 
   const downloadPriceList = () => {
     if (typeof window === "undefined") return;
-    const exportData = defaultPhones.map((phone) => {
-      const inputs = priceInputs[phone.id];
-      const originalPrice = sanitizePrice(inputs?.originalPrice ?? String(phone.originalPrice)) || phone.originalPrice;
-      const salePrice = sanitizePrice(inputs?.salePrice ?? String(phone.price)) || phone.price;
-      const saleActive = Boolean(inputs?.saleActive && originalPrice > salePrice);
-      return { model: phone.model, originalPrice, salePrice, saleActive };
-    });
+    const exportData = defaultPhones.map((phone) => ({ model: phone.model, price: sanitizePrice(priceInputs[phone.id] ?? String(phone.price)) || phone.price }));
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -318,21 +239,17 @@ export default function App() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        const parsed = JSON.parse(String(reader.result)) as Array<{ model?: string; price?: number | string; originalPrice?: number | string; salePrice?: number | string; saleActive?: boolean }>;
+        const parsed = JSON.parse(String(reader.result)) as Array<{ model?: string; price?: number | string }>;
         const nextInputs = { ...priceInputs };
         defaultPhones.forEach((phone) => {
           const match = parsed.find((item) => item.model === phone.model);
-          if (!match) return;
-          const originalPrice = sanitizePrice(String(match.originalPrice ?? match.price ?? phone.originalPrice)) || phone.originalPrice;
-          const salePrice = sanitizePrice(String(match.salePrice ?? match.price ?? phone.price)) || phone.price;
-          nextInputs[phone.id] = {
-            originalPrice: String(originalPrice),
-            salePrice: String(salePrice),
-            saleActive: Boolean(match.saleActive && originalPrice > salePrice),
-          };
+          if (match?.price !== undefined) {
+            const value = sanitizePrice(String(match.price));
+            if (value > 0) nextInputs[phone.id] = String(value);
+          }
         });
         setPriceInputs(nextInputs);
-        setAdminMessage("Imported prices and sale settings. Click save to keep them on this browser.");
+        setAdminMessage("Imported prices. Click save to keep them on this browser.");
       } catch {
         setAdminMessage("Import failed. Use the downloaded JSON format.");
       }
@@ -413,7 +330,7 @@ export default function App() {
                 <div className="absolute bottom-10 left-10 right-10 rounded-[1.5rem] border border-white/30 bg-white/80 p-6 shadow-xl backdrop-blur-xl">
                   <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Online Store Experience</p>
                   <h2 className="mt-2 text-2xl font-semibold text-slate-950">Browse, switch front/back, order fast</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Every matching model stays on the website and now your admin editor can show old price and sale price clearly.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Every matching model stays on the website and new models were added without removing old stock.</p>
                 </div>
               </div>
             </div>
@@ -432,16 +349,7 @@ export default function App() {
                     <p className="text-sm uppercase tracking-[0.3em] text-cyan-600">Real stock highlight</p>
                     <h3 className="mt-2 text-2xl font-semibold">{phone.model}</h3>
                   </div>
-                  <div className="text-right">
-                    {phone.saleActive && phone.originalPrice > phone.price ? (
-                      <>
-                        <p className="text-sm text-slate-400 line-through">{formatPrice(phone.originalPrice)}</p>
-                        <p className="text-lg font-semibold text-rose-600">{formatPrice(phone.price)}</p>
-                      </>
-                    ) : (
-                      <p className="text-lg font-semibold text-slate-950">{formatPrice(phone.price)}</p>
-                    )}
-                  </div>
+                  <p className="text-lg font-semibold text-slate-950">{formatPrice(phone.price)}</p>
                 </div>
               </div>
             </div>
@@ -485,18 +393,11 @@ export default function App() {
           {filteredPhones.map((phone) => {
             const showingBack = Boolean(showBackMap[phone.id] && phone.backImage);
             const activeImage = showingBack ? phone.backImage ?? phone.frontImage : phone.frontImage;
-            const discountPercent = getDiscountPercent(phone.originalPrice, phone.price);
             return (
               <div key={phone.id} className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <div className="relative">
                   <img src={activeImage} alt={`${phone.model} ${showingBack ? "back" : "front"}`} className="h-72 w-full object-cover" />
                   <span className="absolute left-4 top-4 rounded-full bg-cyan-500 px-3 py-1 text-xs font-semibold text-white shadow">{phone.badge}</span>
-                  {phone.saleActive && discountPercent > 0 && (
-                    <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-rose-600 px-3 py-1 text-xs font-semibold text-white shadow">
-                      <Tag className="h-3.5 w-3.5" />
-                      Sale -{discountPercent}%
-                    </span>
-                  )}
                   {phone.backImage && (
                     <button onClick={() => toggleView(phone.id)} className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-slate-800 shadow">
                       {showingBack ? "Show Front" : "Show Back"}
@@ -509,20 +410,8 @@ export default function App() {
                       <h3 className="text-xl font-semibold text-slate-950">{phone.model}</h3>
                       <p className="mt-1 text-sm text-slate-500">Series {phone.series}</p>
                     </div>
-                    <div className="text-right">
-                      {phone.saleActive && phone.originalPrice > phone.price ? (
-                        <>
-                          <p className="text-sm text-slate-400 line-through">{formatPrice(phone.originalPrice)}</p>
-                          <p className="text-lg font-semibold text-rose-600">{formatPrice(phone.price)}</p>
-                        </>
-                      ) : (
-                        <p className="text-lg font-semibold text-cyan-600">{formatPrice(phone.price)}</p>
-                      )}
-                    </div>
+                    <p className="text-lg font-semibold text-cyan-600">{formatPrice(phone.price)}</p>
                   </div>
-                  {phone.saleActive && phone.originalPrice > phone.price && (
-                    <p className="mt-3 text-sm font-medium text-rose-600">Save {formatPrice(phone.originalPrice - phone.price)} today.</p>
-                  )}
                   <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
                     <span className="rounded-full bg-slate-100 px-3 py-1">{phone.storage}</span>
                     <span className="rounded-full bg-slate-100 px-3 py-1">{phone.backImage ? "Front & Back" : "Single View"}</span>
@@ -589,8 +478,8 @@ export default function App() {
             <div className="flex items-center gap-3">
               <Settings2 className="h-5 w-5" />
               <div>
-                <p className="text-sm font-semibold">Admin Price & Sale Editor</p>
-                <p className="text-xs text-white/70">Open this section to set normal prices and sale prices fast.</p>
+                <p className="text-sm font-semibold">Admin Price Editor</p>
+                <p className="text-xs text-white/70">Open this section to change prices fast.</p>
               </div>
             </div>
             <span className="text-sm">{adminOpen ? "Hide" : "Open"}</span>
@@ -599,68 +488,19 @@ export default function App() {
           {adminOpen && (
             <div className="mt-6 space-y-6">
               <div className="rounded-[1.5rem] border border-cyan-100 bg-cyan-50 p-4 text-sm leading-6 text-slate-700">
-                Set the <span className="font-semibold">Old Price</span>, set the <span className="font-semibold">Sale Price</span>, then switch on <span className="font-semibold">Sale Active</span>. Clients will see the old price crossed out and the sale price highlighted. Save to keep the changes on this browser.
+                Change any price below, then click <span className="font-semibold">Save Prices</span>. These changes stay on the browser you used. To move the same prices to another computer, click <span className="font-semibold">Download JSON</span> and later use <span className="font-semibold">Import JSON</span>.
               </div>
               <div className="grid gap-4 md:grid-cols-2">
-                {phones.map((phone) => {
-                  const discountPercent = getDiscountPercent(phone.originalPrice, sanitizePrice(priceInputs[phone.id]?.salePrice ?? String(phone.price)) || phone.price);
-                  return (
-                    <div key={phone.id} className="rounded-[1.5rem] border border-slate-200 p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-950">{phone.model}</p>
-                          <p className="mt-1 text-xs text-slate-500">Use old price for normal price and sale price for discount campaigns.</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => toggleSale(phone.id)}
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${priceInputs[phone.id]?.saleActive ? "bg-rose-100 text-rose-700" : "bg-slate-100 text-slate-600"}`}
-                        >
-                          {priceInputs[phone.id]?.saleActive ? "Sale Active" : "Sale Off"}
-                        </button>
-                      </div>
-
-                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                        <label className="rounded-2xl border border-slate-200 px-4 py-3">
-                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Old Price</p>
-                          <div className="mt-2 flex items-center gap-2">
-                            <span className="text-sm font-semibold text-slate-500">R</span>
-                            <input
-                              value={priceInputs[phone.id]?.originalPrice ?? String(phone.originalPrice)}
-                              onChange={(event) => handlePriceInputChange(phone.id, "originalPrice", event.target.value)}
-                              inputMode="numeric"
-                              className="w-full bg-transparent text-sm outline-none"
-                            />
-                          </div>
-                        </label>
-                        <label className="rounded-2xl border border-slate-200 px-4 py-3">
-                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Sale Price</p>
-                          <div className="mt-2 flex items-center gap-2">
-                            <span className="text-sm font-semibold text-slate-500">R</span>
-                            <input
-                              value={priceInputs[phone.id]?.salePrice ?? String(phone.price)}
-                              onChange={(event) => handlePriceInputChange(phone.id, "salePrice", event.target.value)}
-                              inputMode="numeric"
-                              className="w-full bg-transparent text-sm outline-none"
-                            />
-                          </div>
-                        </label>
-                      </div>
-
-                      <div className="mt-4 rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                        {priceInputs[phone.id]?.saleActive && phone.originalPrice > phone.price ? (
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <span className="text-slate-400 line-through">{formatPrice(phone.originalPrice)}</span>
-                            <span className="font-semibold text-rose-600">{formatPrice(phone.price)}</span>
-                            <span className="rounded-full bg-rose-100 px-2 py-1 text-xs font-semibold text-rose-700">-{discountPercent}%</span>
-                          </div>
-                        ) : (
-                          <span>Client view: <span className="font-semibold text-slate-950">{formatPrice(phone.originalPrice)}</span></span>
-                        )}
-                      </div>
+                {defaultPhones.map((phone) => (
+                  <label key={phone.id} className="rounded-[1.5rem] border border-slate-200 p-4">
+                    <p className="text-sm font-semibold text-slate-950">{phone.model}</p>
+                    <p className="mt-1 text-xs text-slate-500">Enter amount without the R sign if you want.</p>
+                    <div className="mt-3 flex items-center gap-3 rounded-full border border-slate-200 px-4 py-3">
+                      <span className="text-sm font-semibold text-slate-500">R</span>
+                      <input value={priceInputs[phone.id] ?? String(phone.price)} onChange={(event) => handlePriceInputChange(phone.id, event.target.value)} inputMode="numeric" className="w-full bg-transparent text-sm outline-none" />
                     </div>
-                  );
-                })}
+                  </label>
+                ))}
               </div>
               <div className="flex flex-wrap gap-3">
                 <button onClick={savePrices} className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white"><Save className="h-4 w-4" />Save Prices</button>
