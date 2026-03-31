@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ChangeEvent, type ComponentType } from "react";
+import { useMemo, useState, type ChangeEvent, type ComponentType } from "react";
 import {
   Download,
   MessageCircle,
@@ -48,6 +48,7 @@ import iphone16ProMax256Front from "./assets/products/iphone16ProMax256Front.jpe
 import iphone16ProMax256Back from "./assets/products/iphone16ProMax256Back.jpeg";
 import iphone17ProMax256Front from "./assets/products/iphone17ProMax256Front.jpeg";
 import iphone17ProMax256Back from "./assets/products/iphone17ProMax256Back.jpeg";
+import priceData from "./data/prices.json";
 
 type Phone = {
   id: string;
@@ -81,9 +82,18 @@ type Benefit = {
 };
 
 const BRAND_LOGO = iphone14ProMax256Front;
-const PRICE_STORAGE_KEY = "ithreesixty-admin-prices-v2";
+type PriceFileEntry = {
+  model: string;
+  originalPrice: number;
+  salePrice: number;
+  saleActive: boolean;
+};
 
-const defaultPhones: Phone[] = [
+const priceEntriesByModel = new Map(
+  (priceData as PriceFileEntry[]).map((entry) => [entry.model, entry])
+);
+
+const basePhones: Phone[] = [
   { id: "iphone-xr-64gb", model: "iPhone XR 64GB", price: 3990, originalPrice: 3990, saleActive: false, storage: "64GB", series: "XR", frontImage: iphoneXR64Front, backImage: iphoneXR64Back, badge: "Front + Back", featured: true },
   { id: "iphone-xr-128gb", model: "iPhone XR 128GB", price: 4490, originalPrice: 4490, saleActive: false, storage: "128GB", series: "XR", frontImage: iphoneXR128Front, backImage: iphoneXR128Back, badge: "Front + Back" },
   { id: "iphone-11-64gb", model: "iPhone 11 64GB", price: 4990, originalPrice: 4990, saleActive: false, storage: "64GB", series: "11", frontImage: iphone1164Front, backImage: iphone1164Back, badge: "Front + Back", featured: true },
@@ -106,6 +116,22 @@ const defaultPhones: Phone[] = [
   { id: "iphone-16-pro-max-256gb", model: "iPhone 16 Pro Max 256GB", price: 20990, originalPrice: 20990, saleActive: false, storage: "256GB", series: "16 Pro Max", frontImage: iphone16ProMax256Front, backImage: iphone16ProMax256Back, badge: "Ultimate" },
   { id: "iphone-17-pro-max-256gb", model: "iPhone 17 Pro Max 256GB", price: 22990, originalPrice: 22990, saleActive: false, storage: "256GB", series: "17 Pro Max", frontImage: iphone17ProMax256Front, backImage: iphone17ProMax256Back, badge: "Latest Stock", featured: true },
 ];
+
+const defaultPhones: Phone[] = basePhones.map((phone) => {
+  const match = priceEntriesByModel.get(phone.model);
+  if (!match) return phone;
+
+  const originalPrice = sanitizePrice(String(match.originalPrice)) || phone.originalPrice;
+  const salePrice = sanitizePrice(String(match.salePrice)) || phone.price;
+  const saleActive = Boolean(match.saleActive && originalPrice > salePrice);
+
+  return {
+    ...phone,
+    originalPrice,
+    price: saleActive ? salePrice : originalPrice,
+    saleActive,
+  };
+});
 
 const services: Service[] = [
   { icon: Smartphone, title: "iPhone Sales", description: "Shop quality iPhones across multiple generations and storage sizes." },
@@ -168,33 +194,6 @@ export default function App() {
       ])
     );
   });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const stored = window.localStorage.getItem(PRICE_STORAGE_KEY);
-    if (!stored) return;
-    try {
-      const parsed = JSON.parse(stored) as PriceMap;
-      setPriceInputs((current) => {
-        const next = { ...current };
-        defaultPhones.forEach((phone) => {
-          const storedItem = parsed[phone.id];
-          if (!storedItem) return;
-          const originalPrice = sanitizePrice(String(storedItem.originalPrice));
-          const salePrice = sanitizePrice(String(storedItem.salePrice));
-          next[phone.id] = {
-            originalPrice: String(originalPrice || phone.originalPrice),
-            salePrice: String(salePrice || phone.price),
-            saleActive: Boolean(storedItem.saleActive && originalPrice > salePrice),
-          };
-        });
-        return next;
-      });
-      setAdminMessage("Saved prices and sale settings loaded on this device.");
-    } catch {
-      setAdminMessage("Could not read saved prices.");
-    }
-  }, []);
 
   const phones = useMemo(
     () =>
@@ -259,7 +258,6 @@ export default function App() {
       };
       return acc;
     }, {});
-    window.localStorage.setItem(PRICE_STORAGE_KEY, JSON.stringify(cleaned));
     setPriceInputs(
       Object.fromEntries(
         defaultPhones.map((phone) => [
@@ -272,7 +270,7 @@ export default function App() {
         ])
       )
     );
-    setAdminMessage("Prices and sale settings saved on this browser.");
+    setAdminMessage("Prices updated in the editor for preview. For the live website, keep src/data/prices.json updated and redeploy.");
   };
 
   const resetPrices = () => {
@@ -289,7 +287,6 @@ export default function App() {
         ])
       )
     );
-    if (typeof window !== "undefined") window.localStorage.removeItem(PRICE_STORAGE_KEY);
     setAdminMessage("Prices reset to default.");
   };
 
@@ -332,7 +329,7 @@ export default function App() {
           };
         });
         setPriceInputs(nextInputs);
-        setAdminMessage("Imported prices and sale settings. Click save to keep them on this browser.");
+        setAdminMessage("Imported prices into the editor preview. To make them live online, replace src/data/prices.json and redeploy.");
       } catch {
         setAdminMessage("Import failed. Use the downloaded JSON format.");
       }
