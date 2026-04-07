@@ -3,25 +3,25 @@
     "model": "iPhone XR 64GB",
     "originalPrice": 3990,
     "salePrice": 3100,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone XR 128GB",
     "originalPrice": 4490,
     "salePrice": 3200,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 11 64GB",
     "originalPrice": 4990,
     "salePrice": 4100,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 11 128GB",
     "originalPrice": 5490,
     "salePrice": 4300,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 11 Pro 64GB",
@@ -33,7 +33,7 @@
     "model": "iPhone 11 Pro Max 64GB",
     "originalPrice": 6600,
     "salePrice": 5299,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 12 Pro 128GB",
@@ -51,7 +51,7 @@
     "model": "iPhone 13 128GB",
     "originalPrice": 6799,
     "salePrice": 6000,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 13 Pro 128GB",
@@ -69,7 +69,7 @@
     "model": "iPhone 14 Pro 128GB",
     "originalPrice": 10490,
     "salePrice": 8990,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 14 Pro 256GB",
@@ -93,7 +93,7 @@
     "model": "iPhone 15 Pro 256GB",
     "originalPrice": 14900,
     "salePrice": 10999,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 15 Pro Max 128GB",
@@ -105,7 +105,7 @@
     "model": "iPhone 16 256GB",
     "originalPrice": 15500,
     "salePrice": 12499,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 16 Pro 256GB",
@@ -117,12 +117,12 @@
     "model": "iPhone 16 Pro Max 256GB",
     "originalPrice": 20990,
     "salePrice": 16990,
-    "saleActive": true
+    "saleActive": false
   },
   {
     "model": "iPhone 17 Pro Max 256GB",
     "originalPrice": 25500,
-    "salePrice": 22990,
+    "salePrice": 25500,
     "saleActive": false
   }
 ]
