@@ -140,26 +140,9 @@ const services: Service[] = [
 ];
 
 const benefits: Benefit[] = [
-  {
-    icon: ShieldCheck,
-    title: "23+ iPhone Models",
-    text: "Affordable to premium options across multiple generations.",
-  },
-  {
-    icon: CheckCircle2,
-    title: "Secure & Verified",
-    text: "Clear pricing, trusted support, and a premium buying experience.",
-  },
-  {
-    icon: MessageCircle,
-    title: "WhatsApp Support",
-    text: "Fast replies for product questions, upgrades, and orders.",
-  },
-  {
-    icon: Truck,
-    title: "Trusted Devices",
-    text: "Clean devices and simple ordering with front and back product views.",
-  },
+  { icon: ShieldCheck, title: "23+ iPhone Models", text: "Affordable to premium options across multiple generations." },
+  { icon: Truck, title: "Fast response", text: "WhatsApp-first support for quick orders and questions." },
+  { icon: MessageCircle, title: "Easy ordering", text: "Customers can enquire and place orders directly online." },
 ];
 
 function formatPrice(price: number): string {
@@ -241,7 +224,6 @@ export default function App() {
   }, [phones, query, selectedSeries]);
 
   const featuredPhones = useMemo(() => phones.filter((phone) => phone.featured), [phones]);
-  const heroPhone = featuredPhones[0] ?? phones[2];
   const cartCount = cart.length;
   const cartTotal = useMemo(() => cart.reduce((sum, phone) => sum + phone.price, 0), [cart]);
 
@@ -402,18 +384,8 @@ export default function App() {
               </p>
 
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <a
-                  href="#shop"
-                  className="rounded-full bg-slate-900 px-7 py-4 text-center text-sm font-medium text-white shadow-lg transition hover:scale-[1.02]"
-                >
-                  Explore iPhones
-                </a>
-                <a
-                  href={buildWhatsAppLink("Hello, I want to order on WhatsApp.")}
-                  className="rounded-full border border-slate-200 bg-white px-7 py-4 text-center text-sm font-medium text-slate-900 shadow-sm transition hover:border-blue-300"
-                >
-                  Order on WhatsApp
-                </a>
+                <a href="#shop" className="rounded-full bg-slate-900 px-7 py-4 text-center text-sm font-medium text-white shadow-lg transition hover:scale-[1.02]">Explore iPhones</a>
+                <a href={buildWhatsAppLink("Hello, I want to order on WhatsApp.")} className="rounded-full border border-slate-200 bg-white px-7 py-4 text-center text-sm font-medium text-slate-900 shadow-sm transition hover:border-blue-300">Order on WhatsApp</a>
               </div>
 
               <div className="mt-10 grid gap-4 rounded-[2rem] border border-slate-200 bg-white/85 p-5 shadow-sm md:grid-cols-2">
@@ -438,8 +410,8 @@ export default function App() {
               <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-blue-500/15 via-cyan-300/10 to-transparent blur-3xl" />
               <div className="relative flex items-end justify-center">
                 <div className="absolute right-0 top-8 z-20 w-56 rounded-[1.5rem] border border-slate-700/20 bg-slate-900/90 p-5 text-white shadow-2xl backdrop-blur">
-                  <p className="text-sm font-medium text-white/85">{heroPhone.model}</p>
-                  <p className="mt-3 text-4xl font-semibold">{formatPrice(heroPhone.price)}</p>
+                  <p className="text-sm font-medium text-white/85">{phones[3].model}</p>
+                  <p className="mt-3 text-4xl font-semibold">{formatPrice(phones[3].price)}</p>
                   <div className="mt-4 space-y-2 text-xs text-white/80">
                     <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-400" /> Secure & Verified</div>
                     <div className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-cyan-300" /> WhatsApp Support</div>
@@ -448,16 +420,8 @@ export default function App() {
 
                 <div className="relative rounded-[2.5rem] border border-white/70 bg-white/55 px-8 pb-8 pt-10 shadow-2xl backdrop-blur-xl">
                   <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent" />
-                  <img
-                    src={heroPhone.backImage ?? heroPhone.frontImage}
-                    alt={`${heroPhone.model} back`}
-                    className="absolute -left-12 bottom-8 z-0 h-[20rem] w-[10rem] rounded-[2rem] object-cover opacity-95 shadow-xl"
-                  />
-                  <img
-                    src={heroPhone.frontImage}
-                    alt={`${heroPhone.model} front`}
-                    className="relative z-10 h-[26rem] w-[13rem] rounded-[2.25rem] object-cover shadow-2xl"
-                  />
+                  <img src={phones[3].backImage ?? phones[3].frontImage} alt={`${phones[3].model} back`} className="absolute -left-12 bottom-8 z-0 h-[20rem] w-[10rem] rounded-[2rem] object-cover opacity-95 shadow-xl" />
+                  <img src={phones[3].frontImage} alt={`${phones[3].model} front`} className="relative z-10 h-[26rem] w-[13rem] rounded-[2.25rem] object-cover shadow-2xl" />
                 </div>
               </div>
             </div>
@@ -465,7 +429,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-8 sm:px-10 lg:px-12">
+      <section className="mx-auto max-w-7xl px-6 py-6 sm:px-10 lg:px-12">
         <div className="grid gap-6 md:grid-cols-2">
           {featuredPhones.slice(0, 4).map((phone) => (
             <div key={phone.model} className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm">
