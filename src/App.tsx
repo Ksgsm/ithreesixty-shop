@@ -10,6 +10,11 @@ import {
   Truck,
 } from "lucide-react";
 
+import iphone1164Front from "./assets/products/iphone1164Front.jpeg";
+import iphone1164Back from "./assets/products/iphone1164Back.jpeg";
+import iphone11128Front from "./assets/products/iphone11128Front.jpeg";
+import iphone11128Back from "./assets/products/iphone11128Back.jpeg";
+
 type Phone = {
   model: string;
   price: number;
@@ -66,8 +71,8 @@ const phones: Phone[] = [
     storage: "64GB",
     series: "11",
     images: [
-      "/mnt/data/untitled folder/iPhone 11 64GB Front.jpeg",
-      "/mnt/data/untitled folder/iPhone 11 64GB Back.jpeg",
+      iphone1164Front,
+      iphone1164Back,
     ],
     badge: "Great Value",
     featured: true,
@@ -78,8 +83,8 @@ const phones: Phone[] = [
     storage: "128GB",
     series: "11",
     images: [
-      "/mnt/data/untitled folder/iPhone 11 128GB Front.jpeg",
-      "/mnt/data/untitled folder/iPhone 11 128GB Back.jpeg",
+      iphone11128Front,
+      iphone11128Back,
     ],
     badge: "Trending",
     featured: true,
