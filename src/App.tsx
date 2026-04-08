@@ -1,18 +1,14 @@
-import { useMemo, useState, type ChangeEvent, type ComponentType } from "react";
+import { useMemo, useState } from "react";
 import {
-  Download,
+  CheckCircle2,
   MessageCircle,
-  RotateCcw,
-  Save,
   Search,
   Settings2,
   ShieldCheck,
   ShoppingBag,
   Smartphone,
   Star,
-  Tag,
   Truck,
-  Upload,
 } from "lucide-react";
 import iphoneXR64Front from "./assets/products/iphoneXR64Front.jpeg";
 import iphoneXR64Back from "./assets/products/iphoneXR64Back.jpeg";
